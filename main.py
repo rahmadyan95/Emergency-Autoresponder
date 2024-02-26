@@ -72,10 +72,33 @@ class Login_page(ctk.CTkFrame):
 
         if self.first_run:
 
-            login_field_title = CTkLabel(login_field,text="–✦– 𝙎𝙄𝙂𝙉 𝙐𝙋 –✦–",font=self.font(48))
-            login_field_title.place(relx=0.5,rely=0.05,anchor=N)
-            button_register = CTkButton(login_field, text="Switch to Register", command=self.toggle_first_run)
-            button_register.place(relx=0.5, rely=0.1, anchor=N)
+            login_field_title = CTkLabel(login_field,text="Automatic Emergency Responder",font=self.font(28))
+            login_field_title.place(relx=0.5,rely=0.04,anchor=N)
+            
+
+            login_box = CTkFrame(login_field,height=360,width=390,fg_color='grey50'
+                                 ,border_color='white',border_width=5)
+            login_box.place(relx=0.5,rely=0.4, anchor=CENTER)
+            
+            login_title = CTkLabel(login_box,text="Responder Login",font=self.font(22),
+                                   text_color='white')
+            login_title.place(relx=0.5,rely=0.04,anchor=N)
+
+            button_register = CTkButton(login_field, text="Register",fg_color='green', 
+                                        command=self.toggle_first_run,height=40,width=280)
+            button_register.place(relx=0.5, rely=0.93, anchor=S)
+
+            self.badge_number = CTkEntry(login_box,placeholder_text="Input Badge Number",font=self.font(18),
+                                         height=60,width=350,text_color='white',placeholder_text_color='grey50')
+            self.badge_number.place(relx=0.5,rely=0.17,anchor=N)
+
+            self.password = CTkEntry(login_box,placeholder_text="Input Password",font=self.font(18),
+                                         height=60,width=350,text_color='white',placeholder_text_color='grey50')
+            self.password.place(relx=0.5,rely=0.37,anchor=N)
+
+            button_login = CTkButton(login_box, text="Login",fg_color='cyan', 
+                                        command=self.toggle_first_run,height=40,width=280)
+            button_login.place(relx=0.5, rely=0.93, anchor=S)
        
         elif self.first_run == False :
             login_field_title = CTkLabel(login_field,text="–✦– Register –✦–",font=self.font(48))
