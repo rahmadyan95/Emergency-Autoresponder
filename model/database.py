@@ -70,40 +70,24 @@ class DatabaseConnection:
                 cursor.close()
 
 
-    def register_user(self, username, password, nama_user, jabatan):
+    def register_user(self, username, password, name, job_position):
         hashed_password = hashlib.sha256(password.encode()).hexdigest()
         try:
             cursor = self.connection.cursor()
             cursor.execute(
                 "INSERT INTO dispatcher (username, password, user_name, job_position) VALUES (%s, %s, %s, %s)", 
-                (username, hashed_password, nama_user, jabatan)
+                (username, hashed_password, name, job_position)
             )
             self.connection.commit()
             print("User registered successfully")
+            return True
         except Error as err:
             print(f"Error: {err}")
+            return False
         finally:
             if cursor:
                 cursor.close()
 
-    # def login_user(self, username, password):
-    #     hashed_password = hashlib.sha256(password.encode()).hexdigest()
-    #     cursor = None
-    #     try:
-    #         cursor = self.connection.cursor()
-    #         cursor.execute("SELECT * FROM dispatcher WHERE username = %s AND password = %s", (username, hashed_password))
-    #         user = cursor.fetchone()
-    #         if user:
-    #             print("Login successful")
-    #             return True
-    #         else:
-    #             print("Invalid username or password")
-    #             return False
-    #     except Error as err:
-    #         print(f"Error: {err}")
-    #     finally:
-    #         if cursor:
-    #             cursor.close()
 
     def login_user(self, username, password):
         hashed_password = hashlib.sha256(password.encode()).hexdigest()
@@ -136,15 +120,15 @@ if __name__ == "__main__":
     db.create_database()
     db.connect()
 
-    # username = input("Enter username for registration: ")
-    # password = input("Enter password for registration: ")
-    # nama_user = input("Enter name for registration: ")
-    # jabatan = input("Enter position for registration: ")
-    # db.register_user(username, password, nama_user, jabatan)
+    username = input("Enter username for registration: ")
+    password = input("Enter password for registration: ")
+    nama_user = input("Enter name for registration: ")
+    jabatan = input("Enter position for registration: ")
+    db.register_user(username, password, nama_user, jabatan)
 
-    # Login with the registered user
-    username = input("Enter username for login: ")
-    password = input("Enter password for login: ")
-    db.login_user(username, password)
+    # # Login with the registered user
+    # username = input("Enter username for login: ")
+    # password = input("Enter password for login: ")
+    # db.login_user(username, password)
     
    

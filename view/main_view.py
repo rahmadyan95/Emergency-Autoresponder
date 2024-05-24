@@ -3,6 +3,7 @@ import customtkinter as ctk
 import tkinter as tk
 from PIL import Image
 from model.database import DatabaseConnection
+from CTkMessagebox import *
 
 
 class tkinterApp (ctk.CTk):
@@ -55,6 +56,136 @@ class Login_page(ctk.CTkFrame):
         self.first_run = not self.first_run
         self.login_page()
 
+    def login(self):
+        self.login_register_title.configure(text="Sign In Responder")
+        self.login_register_title1.configure(text="Badge ID")
+
+        '''
+        This section is for input to login account
+        '''
+
+
+        self.input_badge_id_signin = CTkEntry(self.login_register_box,height=50,width=400, fg_color="white",font=self.font_not_bold(18),
+                                    text_color="grey20",border_width=0,placeholder_text="")
+        self.input_badge_id_signin.place(x=30,y=120)
+
+        self.input_password_id = CTkEntry(self.login_register_box,height=50,width=400, fg_color="white",font=self.font_not_bold(18),
+                                    text_color="grey20",border_width=0,placeholder_text="",show="*")
+        self.input_password_id.place(x=30,y=215)
+
+
+        self.check_box = CTkCheckBox(self.input_password_id,height=15,width=15,text="",text_color="grey20",
+                                        font=self.font(12),onvalue=0,offvalue=1,command=self.show_password,checkbox_height=30,
+                                        checkbox_width=30)
+        self.check_box.place(relx=0.9,rely=0.5,anchor=W)
+
+        '''
+        END SECTION
+        '''
+
+        self.login_register_title1 = CTkLabel(self.login_register_box,text="Password",font=self.font(18),text_color="grey20")
+        self.login_register_title1.place(x=30,y=180)
+
+        '''
+        This section is login button
+        '''            
+        button_login = CTkButton(self.login_register_box, text="Login",fg_color='#2B70C9',font=self.font(18),hover_color='grey30', 
+                                    command=  self.show_res,height=50,width=400)
+        button_login.place(relx=0.5, rely=0.58, anchor=CENTER)
+
+        self.long_line(self.login_register_box,170,3,30,385)
+        self.text(self.login_register_box,"or",self.font(20),"grey20",215,370)
+        self.long_line(self.login_register_box,170,3,250,385)
+
+        self.button_register = CTkButton(self.login_register_box, text="Create New Account",fg_color='#642424',font=self.font(18),hover_color='grey30', 
+                                        command=self.toggle_first_run,height=50,width=320)
+        self.button_register.place(relx=0.5, rely=0.9, anchor=S)
+
+    def register(self):
+        self.login_register_title.configure(text="Register Responder")
+        self.login_register_title1.configure(text="Responder Name")
+
+        self.login_register_box.configure(height=680)
+
+
+        '''
+        This Field for entry credential of dispactcher
+        '''
+        self.input_responder_name_register = CTkEntry(self.login_register_box,height=50,width=400, fg_color="white",font=self.font_not_bold(18),
+                                    text_color="grey20",border_width=0,placeholder_text="")
+        self.input_responder_name_register.place(x=30,y=120)
+
+        self.input_badge_id_register = CTkEntry(self.login_register_box,height=50,width=400, fg_color="white",font=self.font_not_bold(18),
+                                    text_color="grey20",border_width=0,placeholder_text="")
+        self.input_badge_id_register.place(x=30,y=215)
+
+        self.input_badge_password_register = CTkEntry(self.login_register_box,height=50,width=400, fg_color="white",font=self.font_not_bold(18),
+                                    text_color="grey20",border_width=0,placeholder_text="",show='*')
+        self.input_badge_password_register.place(x=30,y=380+25)
+
+        self.input_badge_repassword_register = CTkEntry(self.login_register_box,height=50,width=400, fg_color="white",font=self.font_not_bold(18),
+                                    text_color="grey20",border_width=0,placeholder_text="",show='*')
+        self.input_badge_repassword_register.place(x=30,y=380+110)
+
+        self.sctructural_ranks = CTkComboBox(self.login_register_box,height=50,width=400,fg_color="white",font=('Arial',18),text_color="grey20",
+                                                dropdown_font=self.font_not_bold(16),
+                                                values=['Dispatch Director','Dispatch Deputy Director',
+                                                        'Senior Operator','Operator II','Operator I','Dispatch Cadet'],
+                                                        button_color='#642424',border_width=2,border_color='grey20')
+        self.sctructural_ranks.place(x=30,y=330-20)
+
+        
+    
+        
+
+
+
+        '''
+        End Field
+        '''
+
+        self.login_register_title1 = CTkLabel(self.login_register_box,text="Badge ID",font=self.font(18),text_color="grey20")
+        self.login_register_title1.place(x=30,y=180)
+
+    
+        self.login_register_title1 = CTkLabel(self.login_register_box,text="Password",font=self.font(18),text_color="grey20")
+        self.login_register_title1.place(x=30,y=350+20)
+
+        self.login_register_title1 = CTkLabel(self.login_register_box,text="Confirm Password",font=self.font(18),text_color="grey20")
+        self.login_register_title1.place(x=30,y=350+110)
+
+        
+
+        self.check_box = CTkCheckBox(self.input_badge_password_register,height=15,width=15,text="",text_color="grey20",
+                                        font=self.font(12),onvalue=0,offvalue=1,command=self.show_password,checkbox_height=30,
+                                        checkbox_width=30)
+        self.check_box.place(relx=0.9,rely=0.5,anchor=W)
+
+        self.check_box2 = CTkCheckBox(self.input_badge_repassword_register,height=15,width=15,text="",text_color="grey20",
+                                        font=self.font(12),onvalue=0,offvalue=1,command=self.show_password,checkbox_height=30,
+                                        checkbox_width=30)
+        self.check_box2.place(relx=0.9,rely=0.5,anchor=W)
+
+        self.submit_register = CTkButton(self.login_register_box,height=50,width=400,fg_color='#42b72a',text_color="white",
+                                            font=self.font(18),text='Submit',command=self.show_res)
+        self.submit_register.place(x=30,y=560)
+
+        self.login_register_title1 = CTkLabel(self.login_register_box,text="Dispatcher Structural Ranks",font=self.font(18),text_color="grey20")
+        self.login_register_title1.place(x=30,y=330-55)
+
+        # self.long_line(self.login_register_box,170,3,30,560)
+        # self.text(self.login_register_box,"or",self.font(20),"grey20",215,560)
+        # self.long_line(self.login_register_box,170,3,250,560)
+
+        have_account_label = CTkLabel(self.login_register_box,text="Have account?",font= (self.font_not_bold(16)),
+                                        cursor='hand2',text_color='grey10')
+        have_account_label.place(relx=0.5 ,rely=0.96, anchor=S)
+        have_account_label.bind('<Button-1>',self.toggle_first_run)
+
+        
+
+
+
     def login_page(self):
         
         box = CTkFrame(self,height=788, width=1400,fg_color="white",bg_color="white")
@@ -73,132 +204,92 @@ class Login_page(ctk.CTkFrame):
         logo_placeholder = CTkButton(login_box,image=logo,fg_color='transparent',text='',state="diabled" ,border_width=0,border_color="white")
         logo_placeholder.place(x=30 , y=240)
 
-        login_register_box = CTkFrame(login_field,height=550,width=450,fg_color="#e6e7df")
-        login_register_box.place(rely=0.5,relx=0.5,anchor=CENTER)
+        self.login_register_box = CTkFrame(login_field,height=550,width=450,fg_color="#e6e7df")
+        self.login_register_box.place(rely=0.5,relx=0.5,anchor=CENTER)
 
-        self.login_register_title = CTkLabel(login_register_box,text="",font=self.font(22),text_color="grey20")
+        self.login_register_title = CTkLabel(self.login_register_box,text="",font=self.font(22),text_color="grey20")
         self.login_register_title.place(x=30,y=25)
 
-        long_line = CTkFrame(login_register_box,width=390,height=5,fg_color='grey20',corner_radius=0)
+        long_line = CTkFrame(self.login_register_box,width=390,height=5,fg_color='grey20',corner_radius=0)
         long_line.place(x=30,y=60)
 
-        self.login_register_title1 = CTkLabel(login_register_box,text="",font=self.font(18),text_color="grey20")
+        self.login_register_title1 = CTkLabel(self.login_register_box,text="",font=self.font(18),text_color="grey20")
         self.login_register_title1.place(x=30,y=85)
+
+        escape_button = CTkButton(self.login_register_box,height=20,width=50,command=lambda : self.controller.show_frame(StartPage))
+        escape_button.place(x=100,y=400)
+
 
         
         if self.first_run:
+            self.login()
         
-            
-            self.login_register_title.configure(text="Sign In Responder")
-            self.login_register_title1.configure(text="Badge ID")
-
-            '''
-            This section is for input to login account
-            '''
-
-
-            self.input_badge_id_signin = CTkEntry(login_register_box,height=50,width=400, fg_color="white",font=self.font_not_bold(18),
-                                      text_color="grey20",border_width=0,placeholder_text="")
-            self.input_badge_id_signin.place(x=30,y=120)
-
-            self.input_password_id = CTkEntry(login_register_box,height=50,width=400, fg_color="white",font=self.font_not_bold(18),
-                                      text_color="grey20",border_width=0,placeholder_text="",show="*")
-            self.input_password_id.place(x=30,y=215)
-
-
-            self.check_box = CTkCheckBox(self.input_password_id,height=15,width=15,text="",text_color="grey20",
-                                         font=self.font(12),onvalue=0,offvalue=1,command=self.show_password,checkbox_height=30,
-                                         checkbox_width=30)
-            self.check_box.place(relx=0.9,rely=0.5,anchor=W)
-
-            '''
-            END SECTION
-            '''
-
-            self.login_register_title1 = CTkLabel(login_register_box,text="Password",font=self.font(18),text_color="grey20")
-            self.login_register_title1.place(x=30,y=180)
-
-            '''
-            This section is login button
-            '''            
-            button_login = CTkButton(login_register_box, text="Login",fg_color='#2B70C9',font=self.font(18),hover_color='grey30', 
-                                        command=  self.show_res,height=50,width=400)
-            button_login.place(relx=0.5, rely=0.58, anchor=CENTER)
-
-            self.long_line(login_register_box,170,3,30,385)
-            self.text(login_register_box,"or",self.font(20),"grey20",215,370)
-            self.long_line(login_register_box,170,3,250,385)
-
-            self.button_register = CTkButton(login_register_box, text="Create New Account",fg_color='#642424',font=self.font(18),hover_color='grey30', 
-                                            command=self.toggle_first_run,height=50,width=320)
-            self.button_register.place(relx=0.5, rely=0.9, anchor=S)
-
-    
 
         elif self.first_run == False :
+            self.register()
 
-            self.login_register_title.configure(text="Register Responder")
-            self.login_register_title1.configure(text="Responder Name")
-
-            self.input_responder_name_register = CTkEntry(login_register_box,height=50,width=400, fg_color="white",font=self.font_not_bold(18),
-                                      text_color="grey20",border_width=0,placeholder_text="")
-            self.input_responder_name_register.place(x=30,y=120)
-
-            self.login_register_title1 = CTkLabel(login_register_box,text="Badge ID",font=self.font(18),text_color="grey20")
-            self.login_register_title1.place(x=30,y=180)
-
-            self.input_badge_id_register = CTkEntry(login_register_box,height=50,width=400, fg_color="white",font=self.font_not_bold(18),
-                                      text_color="grey20",border_width=0,placeholder_text="")
-            self.input_badge_id_register.place(x=30,y=215)
-
-            self.login_register_title1 = CTkLabel(login_register_box,text="Password",font=self.font(18),text_color="grey20")
-            self.login_register_title1.place(x=30,y=280)
-
-            self.input_badge_password_register = CTkEntry(login_register_box,height=50,width=400, fg_color="white",font=self.font_not_bold(18),
-                                      text_color="grey20",border_width=0,placeholder_text="",show='*')
-            self.input_badge_password_register.place(x=30,y=310)
-
-            self.check_box = CTkCheckBox(self.input_badge_password_register,height=15,width=15,text="",text_color="grey20",
-                                         font=self.font(12),onvalue=0,offvalue=1,command=self.show_password,checkbox_height=30,
-                                         checkbox_width=30)
-            self.check_box.place(relx=0.9,rely=0.5,anchor=W)
-
-            self.submit_register = CTkButton(login_register_box,height=50,width=400,fg_color='#42b72a',text_color="white",
-                                             font=self.font(18),text='Submit')
-            self.submit_register.place(x=30,y=380)
-
-            self.long_line(login_register_box,170,3,30,460)
-            self.text(login_register_box,"or",self.font(20),"grey20",215,446)
-            self.long_line(login_register_box,170,3,250,460)
-
-            have_account_label = CTkLabel(login_register_box,text="Have account?",font= (self.font_not_bold(16)),
-                                          cursor='hand2',text_color='grey10')
-            have_account_label.place(relx=0.5 ,rely=0.94, anchor=S)
-            have_account_label.bind('<Button-1>',self.toggle_first_run)
             
             
-            # login_field_title = CTkLabel(login_field,text="–✦– Register –✦–",font=self.font(48))
-            # login_field_title.place(relx=0.5,rely=0.05,anchor=N)
-            # button_signin = CTkButton(login_field, text="Switch to Sign In", command=self.toggle_first_run)
-            # button_signin.place(relx=0.5, rely=0.1, anchor=N)
-
+            
     def show_res(self):
-        self.database = DatabaseConnection()
-        self.database.connect()
-        self.database.login_user(username=str(self.input_badge_id_signin.get()),
-                                 password=str(self.input_password_id.get()))
         
-        if self.database.login_user == True :
-            self.controller.show_frame(StartPage)
-        else : 
-            print('Wrong Password')
+    
+        if self.first_run:
+            self.database = DatabaseConnection()
+            self.database.connect()
 
+            self.database.login_user(username=str(self.input_badge_id_signin.get()),
+                                    password=str(self.input_password_id.get()))
             
+            if self.database.login_user:
+                self.controller.show_frame(StartPage)
+            else : 
+                print('Wrong Password')
+                msg_2 = CTkMessagebox(title="Warning",message="Wrong Dispatcher ID Or Password",icon='cancel',
+                                      option_1="Return")
+                
+                if msg_2.get() == 'Return' :
+                    return
 
-        
-        
+                
+
+        elif self.first_run == False:
+
+            self.database = DatabaseConnection()
+            self.database.connect()
+
+            if (len(self.input_badge_password_register.get()) >= 12) and (self.input_badge_repassword_register.get() == self.input_badge_password_register.get()):
+                self.database.register_user(
+                    username=self.input_badge_id_register.get(),
+                    password=self.input_badge_password_register.get(),
+                    name=self.input_responder_name_register.get(),
+                    job_position=self.sctructural_ranks.get()
+                )
 
 
+                if self.database.register_user:
+                    msg1 = CTkMessagebox(title='Register',message="Register register success",icon='check',
+                                         option_1='OK')
+                    
+                    if msg1.get() == 'OK' :
+                        self.toggle_first_run()
+                else : 
+                    print('Register Failed')
+                    
+                    
+            
+            else:
+                print("Not 12 and Not same")
+                msg = CTkMessagebox(title="Warning",message="Password not same or Password less than 12 Characters",
+                                        icon='cancel',option_1='Return')
+                    
+                if msg.get() == 'Return':
+                    return
+
+
+    
+    
+            
 
 
         
@@ -225,11 +316,23 @@ class Login_page(ctk.CTkFrame):
                 self.input_password_id.configure(show="*")
             elif self.check_box.get() == 0:
                 self.input_password_id.configure(show="")
+# self.input_badge_repassword_register
+
         if hasattr(self, 'input_badge_password_register') and self.input_badge_password_register.winfo_exists():
             if self.check_box.get() == 1:
                 self.input_badge_password_register.configure(show="*")
             elif self.check_box.get() == 0:
                 self.input_badge_password_register.configure(show="")
+
+        if hasattr(self, 'input_badge_repassword_register') and self.input_badge_repassword_register.winfo_exists():
+            if self.check_box2.get() == 1:
+                self.input_badge_repassword_register.configure(show="*")
+            elif self.check_box2.get() == 0:
+                self.input_badge_repassword_register.configure(show="")
+
+                
+
+    
 
     def font(self,ukuran) :
         return ("Arial Bold",ukuran)
@@ -239,6 +342,7 @@ class Login_page(ctk.CTkFrame):
     
 
 class StartPage(ctk.CTkFrame):
+
     def __init__(self, parent,controller):
         super().__init__(parent)
         self._set_appearance_mode("Light")
