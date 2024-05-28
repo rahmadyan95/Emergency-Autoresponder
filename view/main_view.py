@@ -4,6 +4,7 @@ import tkinter as tk
 from PIL import Image
 from model.database import DatabaseConnection
 from CTkMessagebox import *
+from view.view_utils import *
 
 
 class tkinterApp (ctk.CTk):
@@ -23,8 +24,8 @@ class tkinterApp (ctk.CTk):
             frame.grid(row=0, column=0, sticky="nsew")
             
 
-        self.show_frame(Login_page)
-        # self.show_frame(Page3)
+        # self.show_frame(Login_page)
+        self.show_frame(StartPage)
     def show_frame(self, cont):
         frame = self.frames[cont]
         frame.tkraise()
@@ -216,8 +217,8 @@ class Login_page(ctk.CTkFrame):
         self.login_register_title1 = CTkLabel(self.login_register_box,text="",font=self.font(18),text_color="grey20")
         self.login_register_title1.place(x=30,y=85)
 
-        escape_button = CTkButton(self.login_register_box,height=20,width=50,command=lambda : self.controller.show_frame(StartPage))
-        escape_button.place(x=100,y=400)
+        # escape_button = CTkButton(self.login_register_box,height=20,width=50,command=lambda : self.controller.show_frame(StartPage))
+        # escape_button.place(x=100,y=400)
 
 
         
@@ -238,10 +239,10 @@ class Login_page(ctk.CTkFrame):
             self.database = DatabaseConnection()
             self.database.connect()
 
-            self.database.login_user(username=str(self.input_badge_id_signin.get()),
+            login_success = self.database.login_user(username=str(self.input_badge_id_signin.get()),
                                     password=str(self.input_password_id.get()))
             
-            if self.database.login_user:
+            if login_success:
                 self.controller.show_frame(StartPage)
             else : 
                 print('Wrong Password')
@@ -250,8 +251,6 @@ class Login_page(ctk.CTkFrame):
                 
                 if msg_2.get() == 'Return' :
                     return
-
-                
 
         elif self.first_run == False:
 
@@ -287,12 +286,6 @@ class Login_page(ctk.CTkFrame):
                     return
 
 
-    
-    
-            
-
-
-        
     def text(self,position,teks,font,color,x,y):
         text = CTkLabel(position,text=teks,font=font,text_color=color)
         text.place(x=x,y=y)
@@ -301,22 +294,12 @@ class Login_page(ctk.CTkFrame):
         long_line = CTkFrame(position,width=width,height=height,fg_color='grey20',corner_radius=0)
         long_line.place(x=x_position,y=y_position)
 
-    # def show_password(self):
-    #     if self.check_box.get() == 1 :
-    #         self.input_password_id.configure(show="*")
-    #         self.input_badge_password_register.configure(show="*")
-            
-    #     elif self.check_box.get() == 0 :
-    #         self.input_password_id.configure(show="")
-    #         self.input_badge_password_register.configure(show="")
-
     def show_password(self):
         if hasattr(self, 'input_password_id') and self.input_password_id.winfo_exists():
             if self.check_box.get() == 1:
                 self.input_password_id.configure(show="*")
             elif self.check_box.get() == 0:
                 self.input_password_id.configure(show="")
-# self.input_badge_repassword_register
 
         if hasattr(self, 'input_badge_password_register') and self.input_badge_password_register.winfo_exists():
             if self.check_box.get() == 1:
@@ -330,9 +313,6 @@ class Login_page(ctk.CTkFrame):
             elif self.check_box2.get() == 0:
                 self.input_badge_repassword_register.configure(show="")
 
-                
-
-    
 
     def font(self,ukuran) :
         return ("Arial Bold",ukuran)
@@ -340,13 +320,20 @@ class Login_page(ctk.CTkFrame):
     def font_not_bold(self,ukuran) :
         return ("Arial",ukuran)
     
+    
+        
+    
 
 class StartPage(ctk.CTkFrame):
 
     def __init__(self, parent,controller):
         super().__init__(parent)
-        self._set_appearance_mode("Light")
+        self._set_appearance_mode("light")
         self.script_dir = os.path.dirname(os.path.abspath(__file__))
+        
+        self.photo_instance = view_utilites()
+        self.controller = controller
+        
 
         self.dashboard()
         self.notification_field()
@@ -354,8 +341,55 @@ class StartPage(ctk.CTkFrame):
         self.navbar()
 
     def navbar(self):
-        navbar_box = CTkLabel(self,height=80,width=400,bg_color="#642424",corner_radius=8,fg_color='#642424')
-        navbar_box.place(x=15,y=15)
+        navbar_box = CTkLabel(self.box,height=750,width=80,corner_radius=10,fg_color='#642424',text='')
+        navbar_box.place(x=20,rely=0.02)
+
+        logo_directory = os.path.join(self.script_dir, 'assets', 'EAS_logo.png')
+        logo = CTkImage(light_image=Image.open(logo_directory), size=(35,50))
+        logo_placeholder = CTkButton(navbar_box,image=logo,fg_color='transparent',text='',corner_radius=5,state='disabled',
+                                     border_color='white',border_width=3,height=80,width=60)
+        logo_placeholder.place(x=10 , y=10)
+
+        '''
+        Home logo PlaceHolder
+        '''
+
+        logo_directory_home = os.path.join(self.script_dir, 'assets', 'home.png')
+        logo_home = CTkImage(light_image=Image.open(logo_directory_home), size=(40,40))
+        logo_placeholder_home = CTkButton(navbar_box,image=logo_home,fg_color='transparent',text='',
+                                          hover_color='#926565',height=50,width=50)
+        logo_placeholder_home.place(x=12 , y=130)
+
+        logo_directory_cameralogo = os.path.join(self.script_dir, 'assets', 'kamera.png')
+        logo_camera = CTkImage(light_image=Image.open(logo_directory_cameralogo), size=(40,40))
+        logo_placeholder_camera = CTkButton(navbar_box,image=logo_camera,fg_color='transparent',text='',
+                                          hover_color='#926565',height=50,width=50,command= lambda : self.controller.show_frame(Page1))
+        logo_placeholder_camera.place(x=12 , y=200)
+
+        logo_directory_map = os.path.join(self.script_dir, 'assets', 'map.png')
+        logo_map = CTkImage(light_image=Image.open(logo_directory_map), size=(45,45))
+        logo_placeholder_map = CTkButton(navbar_box,image=logo_map,fg_color='transparent',text='',
+                                          hover_color='#926565',height=45,width=45)
+        logo_placeholder_map.place(x=12 , y=270)
+
+        logo_directory_logoticon = os.path.join(self.script_dir, 'assets', 'logout.png')
+        logo_logout = CTkImage(light_image=Image.open(logo_directory_logoticon), size=(40,40))
+        logo_placeholder_logout = CTkButton(navbar_box,image=logo_logout,fg_color='transparent',text='',
+                                          hover_color='#926565',height=50,width=50)
+        logo_placeholder_logout.place(x=12 , y=680)
+
+        logo_directory_gear = os.path.join(self.script_dir, 'assets', 'gear.png')
+        logo_gear = CTkImage(light_image=Image.open(logo_directory_gear), size=(40,40))
+        logo_placeholder_gear = CTkButton(navbar_box,image=logo_gear,fg_color='transparent',text='',
+                                          hover_color='#926565',height=50,width=50)
+        logo_placeholder_gear.place(x=12 , y=610)
+
+
+        
+
+        long_line = CTkFrame(navbar_box,width=65,height=4,fg_color='white',corner_radius=3)
+        long_line.place(x=6,y=110)
+
 
     def responder_status(self):
         title = CTkLabel(self.box,height=35,width=300,fg_color='#642424',text='',corner_radius=5)
@@ -395,9 +429,6 @@ class StartPage(ctk.CTkFrame):
                                       text_color="grey20",border_width=0,placeholder_text="Search",border_color="black")
         self.search.place(relx=0.91,rely=0.02,anchor=NE)
 
-        # sidebar(self)
-        # self.camera_available()
-        
 
 
     def notification_field(self):
@@ -414,16 +445,26 @@ class Page1(ctk.CTkFrame):
     def __init__(self, parent,controller):
         super().__init__(parent)
         self._set_appearance_mode("Light")
+        self.script_dir = os.path.dirname(os.path.abspath(__file__))
+        self.photo_instance = view_utilites()
+
+        self.box = CTkFrame(self,height=788, width=1400,fg_color="#E5E4E2",bg_color="white")
+        self.box.place(x=0,y=0)
+
+        self.photo_instance.navbar(self.box)
+        
         
 class Page2(ctk.CTkFrame):
     def __init__(self, parent,controller):
         super().__init__(parent)
         self._set_appearance_mode("Light")
+        self.script_dir = os.path.dirname(os.path.abspath(__file__))
 
 class Page3(ctk.CTkFrame):
     def __init__(self, parent,controller):
         super().__init__(parent)
         self._set_appearance_mode("Light")
+        self.script_dir = os.path.dirname(os.path.abspath(__file__))
 
 # if __name__ == '__main__' :
 #     app = tkinterApp()

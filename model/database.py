@@ -114,21 +114,21 @@ class DatabaseConnection:
                 cursor.close()
 
 # Usage
-if __name__ == "__main__":
+# if __name__ == "__main__":
     
-    db = DatabaseConnection()
-    db.create_database()
-    db.connect()
+#     db = DatabaseConnection()
+#     db.create_database()
+#     db.connect()
 
-    username = input("Enter username for registration: ")
-    password = input("Enter password for registration: ")
-    nama_user = input("Enter name for registration: ")
-    jabatan = input("Enter position for registration: ")
-    db.register_user(username, password, nama_user, jabatan)
+#     username = input("Enter username for registration: ")
+#     password = input("Enter password for registration: ")
+#     nama_user = input("Enter name for registration: ")
+#     jabatan = input("Enter position for registration: ")
+#     db.register_user(username, password, nama_user, jabatan)
 
-    # # Login with the registered user
-    # username = input("Enter username for login: ")
-    # password = input("Enter password for login: ")
-    # db.login_user(username, password)
+#     # # Login with the registered user
+#     # username = input("Enter username for login: ")
+#     # password = input("Enter password for login: ")
+#     # db.login_user(username, password)
     
    
