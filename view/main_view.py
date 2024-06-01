@@ -18,7 +18,7 @@ class tkinterApp (ctk.CTk):
 
         self.frames = {}
 
-        for F in (Login_page,StartPage, Page1, Page2, Page3):
+        for F in (Login_page,StartPage, Page1, Page2, Page3, Page4):
             frame = F(container, self)
             self.frames[F] = frame
             frame.grid(row=0, column=0, sticky="nsew")
@@ -38,7 +38,6 @@ class Login_page(ctk.CTkFrame):
         self._set_appearance_mode("Light")
         self.script_dir = os.path.dirname(os.path.abspath(__file__))
         self.first_run = True
-
         
 
         '''
@@ -137,10 +136,6 @@ class Login_page(ctk.CTkFrame):
 
         
     
-        
-
-
-
         '''
         End Field
         '''
@@ -331,64 +326,25 @@ class StartPage(ctk.CTkFrame):
         self._set_appearance_mode("light")
         self.script_dir = os.path.dirname(os.path.abspath(__file__))
         
-        self.photo_instance = view_utilites()
+        self.view_instance = view_utilites()
         self.controller = controller
+
+        self.box = CTkFrame(self,height=788, width=1400,fg_color="#E5E4E2",bg_color="white")
+        self.box.place(x=0,y=0)
+
+
+        self.warning_status = False
+
         
 
-        self.dashboard()
-        self.notification_field()
+        # self.dashboard()
+        self.notification_warning()
         self.responder_status()
-        self.navbar()
-
-    def navbar(self):
-        navbar_box = CTkLabel(self.box,height=750,width=80,corner_radius=10,fg_color='#642424',text='')
-        navbar_box.place(x=20,rely=0.02)
-
-        logo_directory = os.path.join(self.script_dir, 'assets', 'EAS_logo.png')
-        logo = CTkImage(light_image=Image.open(logo_directory), size=(35,50))
-        logo_placeholder = CTkButton(navbar_box,image=logo,fg_color='transparent',text='',corner_radius=5,state='disabled',
-                                     border_color='white',border_width=3,height=80,width=60)
-        logo_placeholder.place(x=10 , y=10)
-
-        '''
-        Home logo PlaceHolder
-        '''
-
-        logo_directory_home = os.path.join(self.script_dir, 'assets', 'home.png')
-        logo_home = CTkImage(light_image=Image.open(logo_directory_home), size=(40,40))
-        logo_placeholder_home = CTkButton(navbar_box,image=logo_home,fg_color='transparent',text='',
-                                          hover_color='#926565',height=50,width=50)
-        logo_placeholder_home.place(x=12 , y=130)
-
-        logo_directory_cameralogo = os.path.join(self.script_dir, 'assets', 'kamera.png')
-        logo_camera = CTkImage(light_image=Image.open(logo_directory_cameralogo), size=(40,40))
-        logo_placeholder_camera = CTkButton(navbar_box,image=logo_camera,fg_color='transparent',text='',
-                                          hover_color='#926565',height=50,width=50,command= lambda : self.controller.show_frame(Page1))
-        logo_placeholder_camera.place(x=12 , y=200)
-
-        logo_directory_map = os.path.join(self.script_dir, 'assets', 'map.png')
-        logo_map = CTkImage(light_image=Image.open(logo_directory_map), size=(45,45))
-        logo_placeholder_map = CTkButton(navbar_box,image=logo_map,fg_color='transparent',text='',
-                                          hover_color='#926565',height=45,width=45)
-        logo_placeholder_map.place(x=12 , y=270)
-
-        logo_directory_logoticon = os.path.join(self.script_dir, 'assets', 'logout.png')
-        logo_logout = CTkImage(light_image=Image.open(logo_directory_logoticon), size=(40,40))
-        logo_placeholder_logout = CTkButton(navbar_box,image=logo_logout,fg_color='transparent',text='',
-                                          hover_color='#926565',height=50,width=50)
-        logo_placeholder_logout.place(x=12 , y=680)
-
-        logo_directory_gear = os.path.join(self.script_dir, 'assets', 'gear.png')
-        logo_gear = CTkImage(light_image=Image.open(logo_directory_gear), size=(40,40))
-        logo_placeholder_gear = CTkButton(navbar_box,image=logo_gear,fg_color='transparent',text='',
-                                          hover_color='#926565',height=50,width=50)
-        logo_placeholder_gear.place(x=12 , y=610)
-
-
+        create_navbar(self.box, self.script_dir, self.controller)
+        self.warning_sign()
+        self.accident_notification_details()
+        self.camere_status()
         
-
-        long_line = CTkFrame(navbar_box,width=65,height=4,fg_color='white',corner_radius=3)
-        long_line.place(x=6,y=110)
 
 
     def responder_status(self):
@@ -415,43 +371,135 @@ class StartPage(ctk.CTkFrame):
                              text_color='grey10')
         self.input_divison.place(x = 150, y = 83)
 
-    def dashboard(self) :
-        self.box = CTkFrame(self,height=788, width=1400,fg_color="#E5E4E2",bg_color="white")
-        self.box.place(x=0,y=0)
-
-        # dashboard_title = CTkLabel(self.box,text='Main Dashboard',text_color="grey20",font=('Arial Bold',22))
-        # dashboard_title.place(relx=0.34, rely= 0.04, anchor=NE)
-
-        # dashboard_title_1 = CTkLabel(self.box,text='Available Camera',text_color="grey20",font=('Arial Bold',20))
-        # dashboard_title_1.place(relx=0.339, rely= 0.09, anchor=NE)
 
         self.search = CTkEntry(self.box,height=30,width=200, fg_color="white",font=('Arial',16),
                                       text_color="grey20",border_width=0,placeholder_text="Search",border_color="black")
         self.search.place(relx=0.91,rely=0.02,anchor=NE)
 
+        logo_directory_home = os.path.join(self.script_dir, 'assets', 'dummy.jpg')
+        logo_home = CTkImage(light_image=Image.open(logo_directory_home), size=(110,115))
+        logo_placeholder_home = CTkButton(responder_profile_box, image=logo_home, fg_color='transparent', text='',
+                                        hover_color='#926565', height=110, width=115, state='disabled',border_width=3,border_color='#642424')
+        logo_placeholder_home.place(x=15, y=15)
 
 
-    def notification_field(self):
+    def notification_warning(self):
         notification_title = CTkLabel(self.box,text='Accident Notification',text_color="grey20",font=('Arial Bold',20))
         notification_title.place(relx=0.91,rely=0.35,anchor=NE)
 
-        AER_box = CTkLabel(self.box,height=250,width=300,fg_color='#642424',text='',corner_radius=5)
-        AER_box.place(relx=0.768,rely=0.55,anchor=W)
+        self.AER_box = CTkLabel(self.box,height=100,width=300,fg_color='#642424',text='',corner_radius=5)
+        self.AER_box.place(relx=0.768,rely=0.46,anchor=W)
+
+        # logo_directory_home = os.path.join(self.script_dir, 'assets', 'Warning.png')
+        # self.logo_home = CTkImage(light_image=Image.open(logo_directory_home), size=(70,70))
+        # logo_placeholder_home = CTkButton(self.AER_box, image=self.logo_home, fg_color='transparent', text='',
+        #                                 hover_color='#926565', height=70, width=70, state='disabled',border_width=3,border_color='#642424')
+        # logo_placeholder_home.place(x=10, y=5)
+
+        self.status = CTkLabel(self.AER_box,text="",font=('Arial Bold',20),
+                                  text_color='white')
+        self.status.place(x=95, y = 25)
+
+    def warning_sign(self):
+        if self.warning_status == True :
+            logo_directory_home = os.path.join(self.script_dir, 'assets', 'warning.png')
+            self.logo_home = CTkImage(light_image=Image.open(logo_directory_home), size=(70,70))
+            logo_placeholder_home = CTkButton(self.AER_box, image=self.logo_home, fg_color='transparent', text='',
+                                            hover_color='#926565', height=70, width=70, state='disabled',border_width=3,border_color='#642424')
+            logo_placeholder_home.place(x=10, y=5)
+
+            self.status.configure(text="AN ACCIDENT\nOCCURRED !!!")
+        
+        else :
+            logo_directory_home = os.path.join(self.script_dir, 'assets', 'checklist.png')
+            self.logo_home = CTkImage(light_image=Image.open(logo_directory_home), size=(70,70))
+            logo_placeholder_home = CTkButton(self.AER_box, image=self.logo_home, fg_color='transparent', text='',
+                                            hover_color='#926565', height=70, width=70, state='disabled',border_width=3,border_color='#642424')
+            logo_placeholder_home.place(x=10, y=10)
+
+            self.status = CTkLabel(self.AER_box,text="STANDBY",font=('Arial Bold',20),
+                                  text_color='white')
+            self.status.place(x=115, y = 35)
+
+            self.accidental_detail = CTkLabel(self.box,height=335,width=300,fg_color='white',text='',corner_radius=5)
+            self.accidental_detail.place(relx=0.768,rely=0.745,anchor=W)
+
+            long_line = CTkFrame(self.box, width=6, height=745, fg_color='#642424', corner_radius=4)
+            long_line.place(x=1045, y=15)
+
+            
+
+    def accident_notification_details(self):
+        self.coordinates = CTkLabel(self.accidental_detail,text="Coordinates",font=('Arial Bold',20),text_color='grey10')
+        self.coordinates.place(x=15,y=15)
+
+        self.address = CTkLabel(self.accidental_detail,text="Address",font=('Arial Bold',20),text_color='grey10')
+        self.address.place(x=15,y=45)
+
+    def camere_status(self):
+        title = CTkLabel(self.box,height=35,width=910,fg_color='#642424',text='',corner_radius=5)
+        title.place(x=115,y=18)
+
+        title_1 = CTkLabel(title,text='Camera Status',text_color='white',font=('Arial Bold',14))
+        title_1.place(relx=0.13,rely=0.5,anchor=E)
+
+        scrollable = CTkScrollableFrame(self.box,width=885,height=190,bg_color='transparent',fg_color='transparent',
+                                             orientation='horizontal',border_color='#642424',border_width=3)
+        scrollable.place(x=115,y=60)
+
+        '''
+
+        '''
 
 
+        logo_directory_home = os.path.join(self.script_dir, 'assets', 'dummy.jpg')
+        logo_home = CTkImage(light_image=Image.open(logo_directory_home), size=(110,115))
+        logo_placeholder_home = CTkButton(self.camera_1, image=logo_home, fg_color='transparent', text='',
+                                        hover_color='#926565', height=110, width=115, state='disabled',border_width=3,border_color='#642424')
+        logo_placeholder_home.place(x=15, y=15)
+
+        
+
+        self.camera_1 = CTkButton(scrollable,height=240,width=350,fg_color='white',text='',border_color='green',border_width=5,state='disabled')
+        self.camera_1.pack(side = LEFT,padx=10,pady=10) 
+
+        self.camera_2 = CTkButton(scrollable,height=240,width=350,fg_color='white',text='hello',border_color='green',border_width=5)
+        self.camera_2.pack(side = LEFT,padx=10,pady=10) 
+
+
+
+        '''
+        This section is used to make make camera status placeholder
+        '''
+
+        self.status = CTkLabel(self.camera_1,text="CCTV",font=('Arial Bold',25),text_color='black',fg_color='transparent',
+                               bg_color='transparent')
+        self.status.place(x=20, y=100)
+
+        
+        logo_placeholder_home = CTkButton(self.AER_box, image=self.logo_home, fg_color='transparent', text='',
+                                        hover_color='#926565', height=70, width=70, state='disabled',border_width=3,border_color='#642424')
+        logo_placeholder_home.place(x=10, y=10)
     
+
+
+        
+        
+
+
 
 class Page1(ctk.CTkFrame):
     def __init__(self, parent,controller):
         super().__init__(parent)
         self._set_appearance_mode("Light")
         self.script_dir = os.path.dirname(os.path.abspath(__file__))
-        self.photo_instance = view_utilites()
+
+        self.controller = controller
 
         self.box = CTkFrame(self,height=788, width=1400,fg_color="#E5E4E2",bg_color="white")
         self.box.place(x=0,y=0)
 
-        self.photo_instance.navbar(self.box)
+        create_navbar(self.box, self.script_dir, self.controller)
         
         
 class Page2(ctk.CTkFrame):
@@ -460,11 +508,92 @@ class Page2(ctk.CTkFrame):
         self._set_appearance_mode("Light")
         self.script_dir = os.path.dirname(os.path.abspath(__file__))
 
+        self.controller = controller
+
+        self.box = CTkFrame(self,height=788, width=1400,fg_color="#E5E4E2",bg_color="white")
+        self.box.place(x=0,y=0)
+
+        create_navbar(self.box, self.script_dir, self.controller)
+
 class Page3(ctk.CTkFrame):
     def __init__(self, parent,controller):
         super().__init__(parent)
         self._set_appearance_mode("Light")
         self.script_dir = os.path.dirname(os.path.abspath(__file__))
+
+        self.controller = controller
+
+        self.box = CTkFrame(self,height=788, width=1400,fg_color="#E5E4E2",bg_color="white")
+        self.box.place(x=0,y=0)
+
+        create_navbar(self.box, self.script_dir, self.controller)
+
+class Page4(ctk.CTkFrame):
+    def __init__(self, parent,controller):
+        super().__init__(parent)
+        self._set_appearance_mode("Light")
+        self.script_dir = os.path.dirname(os.path.abspath(__file__))
+
+        self.controller = controller
+
+        self.box = CTkFrame(self,height=788, width=1400,fg_color="#E5E4E2",bg_color="white")
+        self.box.place(x=0,y=0)
+
+        create_navbar(self.box, self.script_dir, self.controller)
+
+
+def create_navbar(parent, script_dir, controller):
+    navbar_box = CTkLabel(parent, height=750, width=80, corner_radius=10, fg_color='#642424', text='')
+    navbar_box.place(x=20, rely=0.02)
+
+    logo_directory = os.path.join(script_dir, 'assets', 'EAS_logo.png')
+    logo = CTkImage(light_image=Image.open(logo_directory), size=(35,50))
+    logo_placeholder = CTkButton(navbar_box, image=logo, fg_color='transparent', text='', corner_radius=5, state='disabled',
+                                 border_color='white', border_width=3, height=80, width=60)
+    logo_placeholder.place(x=10, y=10)
+
+    '''
+    Home logo PlaceHolder
+    '''
+    logo_directory_home = os.path.join(script_dir, 'assets', 'home.png')
+    logo_home = CTkImage(light_image=Image.open(logo_directory_home), size=(40,40))
+    logo_placeholder_home = CTkButton(navbar_box, image=logo_home, fg_color='transparent', text='',
+                                      hover_color='#926565', height=50, width=50, command=lambda: controller.show_frame(StartPage))
+    logo_placeholder_home.place(x=12, y=130)
+
+    logo_directory_cameralogo = os.path.join(script_dir, 'assets', 'kamera.png')
+    logo_camera = CTkImage(light_image=Image.open(logo_directory_cameralogo), size=(40,40))
+    logo_placeholder_camera = CTkButton(navbar_box, image=logo_camera, fg_color='transparent', text='',
+                                        hover_color='#926565', height=50, width=50, command=lambda: controller.show_frame(Page1))
+    logo_placeholder_camera.place(x=12, y=200)
+
+    logo_directory_map = os.path.join(script_dir, 'assets', 'map.png')
+    logo_map = CTkImage(light_image=Image.open(logo_directory_map), size=(45,45))
+    logo_placeholder_map = CTkButton(navbar_box, image=logo_map, fg_color='transparent', text='',
+                                     hover_color='#926565', height=45, width=45, command=lambda: controller.show_frame(Page2))
+    logo_placeholder_map.place(x=12, y=270)
+
+    logo_directory_logoticon = os.path.join(script_dir, 'assets', 'logout.png')
+    logo_logout = CTkImage(light_image=Image.open(logo_directory_logoticon), size=(40,40))
+    logo_placeholder_logout = CTkButton(navbar_box, image=logo_logout, fg_color='transparent', text='',
+                                        hover_color='#926565', height=50, width=50, command=lambda: controller.show_frame(Login_page))
+    logo_placeholder_logout.place(x=12, y=680)
+
+    logo_directory_gear = os.path.join(script_dir, 'assets', 'gear.png')
+    logo_gear = CTkImage(light_image=Image.open(logo_directory_gear), size=(40,40))
+    logo_placeholder_gear = CTkButton(navbar_box, image=logo_gear, fg_color='transparent', text='',
+                                      hover_color='#926565', height=50, width=50, command=lambda: controller.show_frame(StartPage))
+    logo_placeholder_gear.place(x=12, y=610)
+
+    long_line = CTkFrame(navbar_box, width=65, height=4, fg_color='white', corner_radius=3)
+    long_line.place(x=6, y=110)
+
+    long_line_2 = CTkFrame(navbar_box, width=65, height=4, fg_color='white', corner_radius=3)
+    long_line_2.place(x=6, y=590)
+
+    
+
+
 
 # if __name__ == '__main__' :
 #     app = tkinterApp()
