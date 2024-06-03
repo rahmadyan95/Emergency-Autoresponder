@@ -447,42 +447,116 @@ class StartPage(ctk.CTkFrame):
                                              orientation='horizontal',border_color='#642424',border_width=3)
         scrollable.place(x=115,y=60)
 
-        '''
-
-        '''
-
-
-        logo_directory_home = os.path.join(self.script_dir, 'assets', 'dummy.jpg')
-        logo_home = CTkImage(light_image=Image.open(logo_directory_home), size=(110,115))
-        logo_placeholder_home = CTkButton(self.camera_1, image=logo_home, fg_color='transparent', text='',
-                                        hover_color='#926565', height=110, width=115, state='disabled',border_width=3,border_color='#642424')
-        logo_placeholder_home.place(x=15, y=15)
-
+        self.add_camera_button = CTkButton(title,height=25,width=55,text='Add Camera',text_color='black',fg_color='white',
+                                           font=('arial',12))
+        self.add_camera_button.place(x=820,y=5)
         
-
-        self.camera_1 = CTkButton(scrollable,height=240,width=350,fg_color='white',text='',border_color='green',border_width=5,state='disabled')
-        self.camera_1.pack(side = LEFT,padx=10,pady=10) 
-
-        self.camera_2 = CTkButton(scrollable,height=240,width=350,fg_color='white',text='hello',border_color='green',border_width=5)
-        self.camera_2.pack(side = LEFT,padx=10,pady=10) 
-
-
 
         '''
         This section is used to make make camera status placeholder
         '''
 
-        self.status = CTkLabel(self.camera_1,text="CCTV",font=('Arial Bold',25),text_color='black',fg_color='transparent',
+
+        for i in range(30):
+            if i % 2 : 
+                self.input_nama_camera(i,f'AS04082004-{i}','-6.595038,106.816635',False,scrollable)
+            else :
+                self.input_nama_camera(i,f'AS04082004-{i}','-6.595038,106.816635',True,scrollable)
+
+
+    def input_nama_camera(self,num_cam,idcam,coordinate,status,scrollable):
+
+        placeholder = CTkButton(scrollable,height=240,width=350,fg_color='white',text='',border_color='green',border_width=5,state='disabled')
+        placeholder.pack(side = LEFT,padx=10,pady=10) 
+
+        logo_directory_home = os.path.join(self.script_dir, 'assets', 'cctv.png')
+        logo_home = CTkImage(light_image=Image.open(logo_directory_home), size=(90,100))
+        logo_placeholder_home = CTkButton(placeholder, image=logo_home, fg_color='transparent', text='',
+                                        hover_color='#926565', height=90, width=100, state='disabled')
+        logo_placeholder_home.place(x=15, y=10)
+
+        logo_directory_home = os.path.join(self.script_dir, 'assets', 'cctv.png')
+        logo_home = CTkImage(light_image=Image.open(logo_directory_home), size=(90,100))
+        logo_placeholder_home = CTkButton(placeholder, image=logo_home, fg_color='transparent', text='',
+                                        hover_color='#926565', height=90, width=100, state='disabled')
+        logo_placeholder_home.place(x=15, y=10)
+
+        long_line = CTkFrame(placeholder, width=3, height=140, fg_color='black', corner_radius=0)
+        long_line.place(x=130, y=15)
+
+        long_line = CTkFrame(placeholder, width=180, height=3, fg_color='black', corner_radius=0)
+        long_line.place(x=130, y=65)
+
+        long_line = CTkFrame(placeholder, width=180, height=3, fg_color='black', corner_radius=0)
+        long_line.place(x=130, y=120)
+
+        long_line = CTkFrame(placeholder, width=3, height=140, fg_color='black', corner_radius=0)
+        long_line.place(x=130, y=15)
+
+        long_line = CTkFrame(placeholder, width=180, height=3, fg_color='black', corner_radius=0)
+        long_line.place(x=130, y=65)
+
+        long_line = CTkFrame(placeholder, width=180, height=3, fg_color='black', corner_radius=0)
+        long_line.place(x=130, y=120)
+        
+        logo_directory_home = os.path.join(self.script_dir, 'assets', 'cctv.png')
+        logo_home = CTkImage(light_image=Image.open(logo_directory_home), size=(90,100))
+        logo_placeholder_home = CTkButton(placeholder, image=logo_home, fg_color='transparent', text='',
+                                        hover_color='#926565', height=90, width=100, state='disabled')
+        logo_placeholder_home.place(x=15, y=10)
+
+        self.status = CTkLabel(placeholder,text=f"CCTV {num_cam}",font=('Arial Bold',25),text_color='black',fg_color='transparent',
                                bg_color='transparent')
-        self.status.place(x=20, y=100)
+        self.status.place(x=20, y=115)
+
+        self.id_camera = CTkLabel(placeholder,text=f"Camera ID",font=('Arial Bold',18),text_color='black',fg_color='transparent',
+                               bg_color='transparent')
+        self.id_camera.place(x=145, y=15)
+
+        self.id_camera_value = CTkLabel(placeholder,text=f"{idcam}",font=('Arial Bold',16),text_color='#642424',fg_color='transparent',
+                               bg_color='transparent')
+        self.id_camera_value.place(x=145, y=35)
+
+        '''
+        Coordinates Placeholder
+        '''
+
+        self.coordinat = CTkLabel(placeholder,text=f"Coordinate",font=('Arial Bold',18),text_color='black',fg_color='transparent',
+                               bg_color='transparent')
+        self.coordinat.place(x=145, y=70)
+        
+        self.id_camera_value = CTkLabel(placeholder,text=f"{coordinate}",font=('Arial Bold',16),text_color='#642424',fg_color='transparent',
+                               bg_color='transparent')
+        self.id_camera_value.place(x=145, y=90)
+
+        # self.status = CTkLabel(placeholder,text=f"{status}",font=('Arial Bold',16),text_color='#642424',fg_color='transparent',
+        #                        bg_color='transparent')
+        # self.status.place(x=145, y=90)
+
+        if status:
+            self.status = CTkLabel(placeholder,text=f"STANDBY",font=('Arial Bold',16),text_color='green',fg_color='transparent',
+                               bg_color='transparent')
+            self.status.place(x=180, y=125)
+
+            placeholder.configure(border_color='green')
+            
+
+        else :
+            self.status = CTkLabel(placeholder,text=f"SHUTDOWN",font=('Arial Bold',16),text_color='#642424',fg_color='transparent',
+                               bg_color='transparent')
+            self.status.place(x=180, y=125)
+
+            placeholder.configure(border_color='#642424')
+
+
+
 
         
-        logo_placeholder_home = CTkButton(self.AER_box, image=self.logo_home, fg_color='transparent', text='',
-                                        hover_color='#926565', height=70, width=70, state='disabled',border_width=3,border_color='#642424')
-        logo_placeholder_home.place(x=10, y=10)
-    
 
 
+        
+
+        
         
         
 
