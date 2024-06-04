@@ -25,7 +25,7 @@ class tkinterApp (ctk.CTk):
             
 
         # self.show_frame(Login_page)
-        self.show_frame(StartPage)
+        self.show_frame(Login_page)
     def show_frame(self, cont):
         frame = self.frames[cont]
         frame.tkraise()
@@ -177,9 +177,6 @@ class Login_page(ctk.CTkFrame):
                                         cursor='hand2',text_color='grey10')
         have_account_label.place(relx=0.5 ,rely=0.96, anchor=S)
         have_account_label.bind('<Button-1>',self.toggle_first_run)
-
-        
-
 
 
     def login_page(self):
@@ -529,10 +526,6 @@ class StartPage(ctk.CTkFrame):
                                bg_color='transparent')
         self.id_camera_value.place(x=145, y=90)
 
-        # self.status = CTkLabel(placeholder,text=f"{status}",font=('Arial Bold',16),text_color='#642424',fg_color='transparent',
-        #                        bg_color='transparent')
-        # self.status.place(x=145, y=90)
-
         if status:
             self.status = CTkLabel(placeholder,text=f"STANDBY",font=('Arial Bold',16),text_color='green',fg_color='transparent',
                                bg_color='transparent')
@@ -547,19 +540,6 @@ class StartPage(ctk.CTkFrame):
             self.status.place(x=180, y=125)
 
             placeholder.configure(border_color='#642424')
-
-
-
-
-        
-
-
-        
-
-        
-        
-        
-
 
 
 class Page1(ctk.CTkFrame):
