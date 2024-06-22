@@ -1,4 +1,4 @@
-import mysql.connector as sqlcon
+# import mysql.connector as sqlcon
 # from mysql.connector import Error
 from dotenv import load_dotenv
 import os
@@ -9,22 +9,17 @@ from psycopg2 import Error
 script_dir = os.path.dirname(os.path.abspath(__file__))
 env_path = os.path.join(script_dir, '.env')
 
-DATABASE_URL = "postgres://default:vxaClStN9b6w@ep-wandering-bonus-a1vnxdai.ap-southeast-1.aws.neon.tech:5432/verceldb?sslmode=require"
 load_dotenv(env_path)
+
 
 
 class DatabaseConnection:
     def __init__(self):
 
-        host: str = os.getenv('HOST')
-        user: str = os.getenv('USER')
-        password: str = os.getenv('PASSWORD')
-        database: str = os.getenv('DATABASE')
+      
+        link: str = os.getenv('DATABASE_URL')
         
-        self.host = host
-        self.user = user
-        self.password = password
-        self.database = database
+        self.link = link
         self.connection = None
 
     def connect(self):
@@ -41,10 +36,10 @@ class DatabaseConnection:
             #     database=self.database
             # )
 
-            self.connection = psycopg2.connect(DATABASE_URL)
+            self.connection = psycopg2.connect(self.link)
             if self.connection:
                 print("Connected to the database")
-        except sqlcon.Error as err:
+        except Error as err:
             print(f"Error: {err}")
 
     def close(self):
@@ -54,9 +49,10 @@ class DatabaseConnection:
         Prints a message if the connection is successfully closed.
         """
 
-        if self.connection and self.connection.is_connected():
+        if self.connection and self.connection.isexecuting:
             self.connection.close()
             print("Connection closed")
+    
 
     def create_database(self):
         
@@ -68,7 +64,7 @@ class DatabaseConnection:
         
 
         try:
-            self.connection = psycopg2.connect(DATABASE_URL)
+            self.connection = psycopg2.connect(self.link)
 
             cursor = self.connection.cursor()
             cursor.execute("""
@@ -165,20 +161,22 @@ class DatabaseConnection:
 
 # Usage
 # if __name__ == "__main__":
-    
-    # db = DatabaseConnection()
-    # # db.create_database()
-    # db.connect()
+# instance = DatabaseConnection()
+# instance.connect()
+# instance.close()
+#     db = DatabaseConnection()
+#     # db.create_database()
+#     db.connect()
 
-    # username = input("Enter username for registration: ")
-    # password = input("Enter password for registration: ")
-    # nama_user = input("Enter name for registration: ")
-    # jabatan = input("Enter position for registration: ")
-    # db.register_user(username, password, nama_user, jabatan)
+#     username = input("Enter username for registration: ")
+#     password = input("Enter password for registration: ")
+#     nama_user = input("Enter name for registration: ")
+#     jabatan = input("Enter position for registration: ")
+#     db.register_user(username, password, nama_user, jabatan)
 
-# Login with the registered user
-    # username = input("Enter username for login: ")
-    # password = input("Enter password for login: ")
-    # db.login_user(username, password)
+# # Login with the registered user
+#     username = input("Enter username for login: ")
+#     password = input("Enter password for login: ")
+#     db.login_user(username, password)
     
    

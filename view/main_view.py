@@ -4,8 +4,15 @@ import tkinter as tk
 from PIL import Image
 from model.database import DatabaseConnection
 from CTkMessagebox import *
-from view.view_utils import *
-
+from model.add_camera_db import camera_db
+from tkintermapview import TkinterMapView as CTkMap
+import cv2
+from ultralytics import YOLO
+import pandas as pd
+from PIL import Image, ImageTk
+from view.tracker import*
+import datetime
+import json
 
 class tkinterApp (ctk.CTk):
     def __init__(self,*args, **kwargs):
@@ -38,6 +45,7 @@ class Login_page(ctk.CTkFrame):
         self._set_appearance_mode("Light")
         self.script_dir = os.path.dirname(os.path.abspath(__file__))
         self.first_run = True
+
         
 
         '''
@@ -323,17 +331,15 @@ class StartPage(ctk.CTkFrame):
         self._set_appearance_mode("light")
         self.script_dir = os.path.dirname(os.path.abspath(__file__))
         
-        self.view_instance = view_utilites()
         self.controller = controller
 
         self.box = CTkFrame(self,height=788, width=1400,fg_color="#E5E4E2",bg_color="white")
         self.box.place(x=0,y=0)
 
-
+        self.camera_db = camera_db()
         self.warning_status = False
 
         
-
         # self.dashboard()
         self.notification_warning()
         self.responder_status()
@@ -341,8 +347,34 @@ class StartPage(ctk.CTkFrame):
         self.warning_sign()
         self.accident_notification_details()
         self.camere_status()
+        self.map_view()
+
+        self.dispacther_location("Standby Hospital","152",115,285, photo_name='redcross.png')
+        self.dispacther_location("Police Station","253",418,285, photo_name='police_logo.jpg')
+        self.dispacther_location("Fire Station","129",721,285, photo_name='fireman.jpg')
+
+        self.input_nama_camera('1','CGDK331','-6.34224, 11.4234',True,self.scrollable)
+        self.input_nama_camera('2','CGDK332','-6.34224 12.3223',False,self.scrollable)
+        
         
 
+    def map_view(self):
+
+        title = CTkLabel(self.box,height=35,width=910,fg_color='#642424',text='',corner_radius=5)
+        title.place(x=115,y=445)
+
+        title_1 = CTkLabel(title,text='Map Availability Responder',text_color='white',font=('Arial Bold',14))
+        title_1.place(relx=0.38,rely=0.5,anchor=E)
+
+
+        self.map = CTkMap(self.box,width=1800,height=540,corner_radius=10)
+        self.map.place(x=230,y=980)
+
+        self.map.set_position(-6.2079558,106.7968640)
+        self.map.set_zoom(15)
+
+
+    
 
     def responder_status(self):
         title = CTkLabel(self.box,height=35,width=300,fg_color='#642424',text='',corner_radius=5)
@@ -357,7 +389,7 @@ class StartPage(ctk.CTkFrame):
         name = CTkLabel(responder_profile_box, text="Name", font=('Arial',14), text_color='grey40')
         name.place(x=150, y = 15)
 
-        self.inputname = CTkLabel(responder_profile_box,text="Umam Madura",font=('Arial Bold',16),
+        self.inputname = CTkLabel(responder_profile_box,text="Dispactcher",font=('Arial Bold',16),
                                   text_color='grey10')
         self.inputname.place(x=150, y = 35)
 
@@ -378,7 +410,6 @@ class StartPage(ctk.CTkFrame):
         logo_placeholder_home = CTkButton(responder_profile_box, image=logo_home, fg_color='transparent', text='',
                                         hover_color='#926565', height=110, width=115, state='disabled',border_width=3,border_color='#642424')
         logo_placeholder_home.place(x=15, y=15)
-
 
     def notification_warning(self):
         notification_title = CTkLabel(self.box,text='Accident Notification',text_color="grey20",font=('Arial Bold',20))
@@ -424,14 +455,46 @@ class StartPage(ctk.CTkFrame):
             long_line = CTkFrame(self.box, width=6, height=745, fg_color='#642424', corner_radius=4)
             long_line.place(x=1045, y=15)
 
-            
-
     def accident_notification_details(self):
-        self.coordinates = CTkLabel(self.accidental_detail,text="Coordinates",font=('Arial Bold',20),text_color='grey10')
-        self.coordinates.place(x=15,y=15)
+        # self.coordinates = CTkLabel(self.accidental_detail,text="Coordinates",font=('Arial Bold',20),text_color='grey10')
+        # self.coordinates.place(x=15,y=15)
 
-        self.address = CTkLabel(self.accidental_detail,text="Address",font=('Arial Bold',20),text_color='grey10')
-        self.address.place(x=15,y=45)
+        # self.address = CTkLabel(self.accidental_detail,text="Address",font=('Arial Bold',20),text_color='grey10')
+        # self.address.place(x=15,y=45)
+
+        scrollable = CTkScrollableFrame(self.accidental_detail,width=260,height=290,bg_color='transparent',fg_color='transparent',
+                                             orientation='vertical',border_color='#642424',border_width=3)
+        scrollable.place(x=10,y=10)
+
+        placeholder = CTkButton(scrollable,height=270,width=250,fg_color='white',text='',border_color='black',border_width=5,state='disabled')
+        placeholder.pack(side = LEFT,padx=5,pady=5)
+
+        latlong = CTkLabel(placeholder,text_color='black',font=('Arial bold',16),text='Latitude Longitude')
+        latlong.place(x=15,y=10)
+
+        latlong_loc = CTkLabel(placeholder,text_color='grey10',font=('Arial ',15),text='-6.190071,106.797188')
+        latlong_loc.place(x=15,y=35)
+
+        day = CTkLabel(placeholder,text_color='black',font=('Arial bold',16),text='Day')
+        day.place(x=15,y=60)
+
+        day_val = CTkLabel(placeholder,text_color='grey10',font=('Arial ',15),text='Monday')
+        day_val.place(x=15,y=85)
+
+        date = CTkLabel(placeholder,text_color='black',font=('Arial bold',16),text='Date')
+        date.place(x=15,y=110)
+
+        date_val = CTkLabel(placeholder,text_color='grey10',font=('Arial ',15),text='26-06-2024')
+        date_val.place(x=15,y=135)
+
+        hour = CTkLabel(placeholder,text_color='grey10',font=('Arial bold',16),text='Time')
+        hour.place(x=15,y=160)
+
+        hour_val = CTkLabel(placeholder,text_color='grey10',font=('Arial ',15),text='18:25:14')
+        hour_val.place(x=15,y=185)
+
+
+
 
     def camere_status(self):
         title = CTkLabel(self.box,height=35,width=910,fg_color='#642424',text='',corner_radius=5)
@@ -440,26 +503,46 @@ class StartPage(ctk.CTkFrame):
         title_1 = CTkLabel(title,text='Camera Status',text_color='white',font=('Arial Bold',14))
         title_1.place(relx=0.13,rely=0.5,anchor=E)
 
-        scrollable = CTkScrollableFrame(self.box,width=885,height=190,bg_color='transparent',fg_color='transparent',
+        self.scrollable = CTkScrollableFrame(self.box,width=885,height=190,bg_color='transparent',fg_color='transparent',
                                              orientation='horizontal',border_color='#642424',border_width=3)
-        scrollable.place(x=115,y=60)
+        self.scrollable.place(x=115,y=60)
 
-        self.add_camera_button = CTkButton(title,height=25,width=55,text='Add Camera',text_color='black',fg_color='white',
-                                           font=('arial',12))
-        self.add_camera_button.place(x=820,y=5)
+
+
         
 
         '''
         This section is used to make make camera status placeholder
         '''
+        # camera_data = self.camera_db.get_all_camera_data()
+
+       
+    def dispacther_location(self,title_text,num_value,posisi_x,posisi_y,photo_name):
+        # x=115 y=285
+        box = CTkLabel(self.box,height=150,width=295)
+        box.place(x=posisi_x,y=posisi_y)
+
+        title = CTkLabel(box,height=35,width=295,fg_color='#642424',text='',corner_radius=5)
+        title.place(x=0,y=0)
+
+        title_1 = CTkLabel(title,text=f'{title_text}',text_color='white',font=('Arial Bold',14))
+        title_1.place(x=20,y=4)
+
+        self.value_box = CTkButton(box,height=100,width=295,bg_color='transparent',fg_color='white',state='disabled',text='',text_color_disabled='black',font=('Arial Bold',20))
+        self.value_box.place(x=0,y=40)
+
+        self.value = CTkLabel(self.value_box,text=num_value,text_color='black',font=('Arial Bold',45))
+        self.value.place(x=170,y=20)
+
+        path = os.path.join(self.script_dir, 'assets', photo_name)
+        logo_home = CTkImage(light_image=Image.open(path), size=(75,75))
+        logo_placeholder_home = CTkButton(self.value_box, image=logo_home, fg_color='transparent', text='',
+                                        hover_color='#926565', height=90, width=100, state='disabled')
+        logo_placeholder_home.place(x=15, y=5)
 
 
-        for i in range(30):
-            if i % 2 : 
-                self.input_nama_camera(i,f'AS04082004-{i}','-6.595038,106.816635',False,scrollable)
-            else :
-                self.input_nama_camera(i,f'AS04082004-{i}','-6.595038,106.816635',True,scrollable)
-
+    # def map_on_dashboard(self):
+        
 
     def input_nama_camera(self,num_cam,idcam,coordinate,status,scrollable):
 
@@ -532,6 +615,10 @@ class StartPage(ctk.CTkFrame):
             self.status.place(x=180, y=125)
 
             placeholder.configure(border_color='green')
+
+            
+
+            
             
 
         else :
@@ -543,17 +630,180 @@ class StartPage(ctk.CTkFrame):
 
 
 class Page1(ctk.CTkFrame):
-    def __init__(self, parent,controller):
+    def __init__(self, parent, controller):
         super().__init__(parent)
         self._set_appearance_mode("Light")
         self.script_dir = os.path.dirname(os.path.abspath(__file__))
-
         self.controller = controller
 
-        self.box = CTkFrame(self,height=788, width=1400,fg_color="#E5E4E2",bg_color="white")
-        self.box.place(x=0,y=0)
+        self.box = ctk.CTkFrame(self, height=788, width=1400, fg_color="#E5E4E2", bg_color="white")
+        self.box.place(x=0, y=0)
 
         create_navbar(self.box, self.script_dir, self.controller)
+
+
+        self.setup_ui()
+        
+        
+       
+
+        self.processing = False  # Flag to indicate if processing is active
+
+        # self.start_processing()
+
+        title = CTkLabel(self.box,height=35,width=1000,fg_color='#642424',text='',corner_radius=5)
+        title.place(x=130,y=20)
+
+        title_1 = CTkLabel(title,text='CCTV Live Camera',text_color='white',font=('Arial Bold',14))
+        title_1.place(relx=0.18,rely=0.5,anchor=E)
+
+        self.videobox_1 = ctk.CTkLabel(self.box, height=563, width=1000,bg_color="transparent",fg_color='white',text='Start Video',corner_radius=10)
+        self.videobox_1.place(x=130, y=65)
+
+        
+        
+        title_2 = CTkLabel(self.box,height=35,width=235,fg_color='#642424',text='',corner_radius=5)
+        title_2.place(x=1145,y=20)
+        title_3 = CTkLabel(title_2,text='Camera Configuration',text_color='white',font=('Arial Bold',14))
+        title_3.place(relx=0.8,rely=0.5,anchor=E)
+
+
+
+        self.videobox_str = ctk.CTkLabel(self.box, height=150, width=235,bg_color="transparent",fg_color='white',text='',corner_radius=10)
+        self.videobox_str.place(x=1145, y=65)
+        
+        self.button_start = CTkButton(self.videobox_str,height=50,width=215,command=self.start_processing,fg_color='#C1E1C1'
+                                      ,hover_color='#b8d8be',text='START DETECT',font=('Arial Bold',18),text_color='grey10')
+        self.button_start.place(x=10,y=10 )
+
+        self.button_stop = CTkButton(self.videobox_str,height=50,width=215,command=self.stop_processing,fg_color='#fdaaaa'
+                                      ,hover_color='#ee6969',text='STOP DETECT',font=('Arial Bold',18),text_color='grey10')
+        self.button_stop.place(x=10,y=70)
+
+        self.button_stop.configure(state='disabled')
+
+        
+
+
+        
+        
+    def setup_ui(self):
+
+        self.videobox = ctk.CTkLabel(self, height=563, width=1000,bg_color="#E5E4E2",fg_color='white',text='Start Video',corner_radius=10)
+        self.videobox.place(x=130, y=65)
+
+        self.model = YOLO('C:\\Users\\Rahmadyan\\Documents\\Project\\traffic_accident_detector\\p.pt')
+
+        self.cap = cv2.VideoCapture('C:\\Users\\Rahmadyan\\Documents\\Project\\traffic_accident_detector\\dataset3.mp4')
+
+        with open("C:\\Users\\Rahmadyan\\Documents\\Project\\traffic_accident_detector\\coco.txt", "r") as my_file:
+            data = my_file.read()
+            self.class_list = data.split("\n")
+
+        self.count = 0
+        self.tracker = Tracker()
+
+        self.font = cv2.FONT_HERSHEY_SIMPLEX
+        self.font_scale = 1
+        self.font_color = (255, 255, 0)
+        self.font_thickness = 2
+
+        self.cy1 = 194
+        self.cy2 = 220
+        self.offset = 6
+        self.coord_y_line1, selfoffset = 700, 40
+
+        self.data, self.counter1 = {}, []
+        self.x = datetime.datetime.now()
+
+    def start_processing(self):
+        if not self.processing:
+            self.processing = True
+            
+            self.button_start.configure(state='disabled')
+            self.button_stop.configure(state='normal')
+            self.update_frame()
+
+    def stop_processing(self):
+        self.processing = False
+        
+        self.button_start.configure(state='normal')
+        self.button_stop.configure(state='disabled')  # Release the video capture
+        self.cap.release()
+        self.videobox.destroy()
+
+    def update_frame(self):
+        if self.processing:
+            ret, frame = self.cap.read()
+            if not ret:
+                self.stop_processing()
+                return
+
+            self.count += 1
+            if self.count % 3 == 0:
+                frame = cv2.resize(frame, (1020, 500))
+
+                results = self.model.predict(frame)
+                a = results[0].boxes.data
+                px = pd.DataFrame(a).astype("float")
+
+
+                list = []
+                for index, row in px.iterrows():
+                    x1 = int(row[0])
+                    y1 = int(row[1])
+                    x2 = int(row[2])
+                    y2 = int(row[3])
+                    d = int(row[5])
+
+                    c = self.class_list[d]
+                    if 'accident' in c:
+                        print(x1)
+                        list.append([x1, y1, x2, y2])
+
+                bbox_id = self.tracker.update(list)
+                for bbox in bbox_id:
+                    x3, y3, x4, y4, id = bbox
+                    cx = int(x3 + x4) // 2
+                    cy = int(y3 + y4) // 2
+                    cv2.circle(frame, (cx, cy), 4, (255, 0, 255), -1)
+                    cv2.rectangle(frame, (x3, y3), (x4, y4), (0, 0, 255), 2)
+
+                    if y3 <= self.cy1 + self.offset and y4 >= self.cy1 - self.offset:
+                        # accident_data = f"Accident detected at Line 1: ID {id} at {datetime.datetime.now()}\n"
+                        # self.log_accident(accident_data)
+
+                        if self.counter1.count(id) == 0:
+                            self.data[id] = {
+                                'latitude' : -6.190071,
+                                'longitude' : 106.797188,
+                                'day' : f'{self.x.strftime("%A")}',
+                                'date' : f'{self.x.day},{self.x.month},{self.x.year}',
+                                'time': f'{self.x.strftime("%H:%M:%S")}'
+                            }
+                            self.counter1.append(id) 
+                            self.log_accident(self.data)
+                    
+
+                cv2.line(frame, (3, self.cy1), (1018, self.cy1), (0, 255, 0), 2)
+                cv2.line(frame, (5, self.cy2), (1019, self.cy2), (0, 255, 255), 2)
+                cv2.putText(frame, "Cam2", (20, 30), self.font, self.font_scale, self.font_color, self.font_thickness)
+
+                frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+                img = Image.fromarray(frame)
+                self.imgtk = ctk.CTkImage(img, size=(930, 530))
+                self.videobox.imgtk = self.imgtk
+                self.videobox.configure(image=self.imgtk)
+                self.videobox.image = self.imgtk
+
+            self.after(10, self.update_frame)
+
+    def log_accident(self, data):
+        with open("C:\\Users\\Rahmadyan\\Documents\\Project\\traffic_accident_detector\\accident_log.json", "w") as log_file:
+            json.dump(data, log_file, indent=4)
+
+
+
         
         
 class Page2(ctk.CTkFrame):
@@ -568,6 +818,24 @@ class Page2(ctk.CTkFrame):
         self.box.place(x=0,y=0)
 
         create_navbar(self.box, self.script_dir, self.controller)
+
+        self.mapping()
+
+    def mapping(self):
+        title = CTkLabel(self.box,height=35,width=1240,fg_color='#642424',text='',corner_radius=5)
+        title.place(x=115,y=20)
+
+        title_1 = CTkLabel(title,text='Overall Map',text_color='white',font=('Arial Bold',14))
+        title_1.place(relx=0.18,rely=0.5,anchor=E)
+
+        self.peta = CTkMap(self.box,width=2480,height=1400,corner_radius=10)
+        self.peta.place(x=230,y=130)
+
+        self.peta.set_position(-6.2079558,106.7968640)
+        self.peta.set_zoom(15)
+
+
+
 
 class Page3(ctk.CTkFrame):
     def __init__(self, parent,controller):
@@ -594,6 +862,8 @@ class Page4(ctk.CTkFrame):
         self.box.place(x=0,y=0)
 
         create_navbar(self.box, self.script_dir, self.controller)
+
+    
 
 
 def create_navbar(parent, script_dir, controller):

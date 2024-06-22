@@ -1,0 +1,15 @@
+Accident detected at Line 1: ID 0, Jakarta Location: (-6.2088, 106.8456), Time: 2024-06-22 17:55:31.333603
+Accident detected at Line 1: ID 1, Jakarta Location: (-6.2088, 106.8456), Time: 2024-06-22 17:55:31.334608
+Accident detected at Line 2: ID 1, Jakarta Location: (-6.2088, 106.8456), Time: 2024-06-22 17:55:31.335112
+Accident detected at Line 1: ID 2, Jakarta Location: (-6.2088, 106.8456), Time: 2024-06-22 17:55:32.083536
+Accident detected at Line 2: ID 2, Jakarta Location: (-6.2088, 106.8456), Time: 2024-06-22 17:55:32.083536
+Accident detected at Line 1: ID 3, Jakarta Location: (-6.2088, 106.8456), Time: 2024-06-22 17:55:32.454316
+Accident detected at Line 2: ID 3, Jakarta Location: (-6.2088, 106.8456), Time: 2024-06-22 17:55:32.455821
+Accident detected at Line 1: ID 3, Jakarta Location: (-6.2088, 106.8456), Time: 2024-06-22 17:55:32.816956
+Accident detected at Line 2: ID 3, Jakarta Location: (-6.2088, 106.8456), Time: 2024-06-22 17:55:32.816956
+Accident detected at Line 1: ID 4, Jakarta Location: (-6.2088, 106.8456), Time: 2024-06-22 17:55:34.295710
+Accident detected at Line 2: ID 4, Jakarta Location: (-6.2088, 106.8456), Time: 2024-06-22 17:55:34.296230
+Accident detected at Line 1: ID 4, Jakarta Location: (-6.2088, 106.8456), Time: 2024-06-22 17:55:34.663188
+Accident detected at Line 2: ID 4, Jakarta Location: (-6.2088, 106.8456), Time: 2024-06-22 17:55:34.664691
+Accident detected at Line 1: ID 4, Jakarta Location: (-6.2088, 106.8456), Time: 2024-06-22 17:55:35.017279
+Accident detected at Line 2: ID 4, Jakarta Location: (-6.2088, 106.8456), Time: 2024-06-22 17:55:35.017784
